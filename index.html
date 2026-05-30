@@ -244,6 +244,48 @@
             color: #D84315;
         }
         .coin-icon { font-size: 42px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        
+        .telegram-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(95deg, #FF6B35, #E65C1E);
+            border: none;
+            border-radius: 60px;
+            padding: 16px 20px;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 8px 16px rgba(230, 92, 30, 0.3);
+            text-decoration: none;
+        }
+        .telegram-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 8px rgba(230, 92, 30, 0.4);
+        }
+        .telegram-icon {
+            background: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .telegram-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+        .telegram-sub {
+            font-size: 12px;
+            color: #FFE2D1;
+            font-weight: 500;
+        }
         .placeholder-card {
             background: #FFF4EA;
             border-radius: 28px;
@@ -363,12 +405,12 @@
             </div>
         </div>
         <div class="products-grid" id="productsGrid">
-            <!-- товары будут отрисованы через JS -->
+            <!-- товары отрисоваются JS -->
             <div style="text-align:center; padding:20px;">Загрузка товаров...</div>
         </div>
     </div>
 
-    <!-- ПРОФИЛЬ -->
+    <!-- ПРОФИЛЬ с телеграм кнопкой -->
     <div id="profilePage" class="page hide">
         <div class="top-bar"><div class="logo">PHOENIXSHOP</div><div class="manager-name" id="profileManagerName">Загрузка...</div></div>
         <div class="balance-section">
@@ -378,6 +420,17 @@
                 <span id="profileBalance">1000</span>
             </div>
         </div>
+        
+        <!-- КРАСИВАЯ КНОПКА TELEGRAM -->
+        <a href="https://t.me/+Ng-cLuXBfypkNmVi" target="_blank" rel="noopener noreferrer" class="telegram-btn" id="telegramChannelBtn">
+            <div class="telegram-icon">📢</div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <span class="telegram-text">🔥 PHOENIX CHANNEL</span>
+                <span class="telegram-sub">новости, акции, розыгрыши</span>
+            </div>
+            <div style="margin-left: auto;">➡️</div>
+        </a>
+        
         <div class="placeholder-card">
             🔥 Скоро здесь появится что-то жаркое 🔥
         </div>
@@ -652,7 +705,6 @@
             </div>
         `).join('');
 
-        // Навесить обработчики на кнопки покупки
         document.querySelectorAll('#productsGrid .add-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -663,27 +715,24 @@
         });
     }
 
-    // --- НАВИГАЦИЯ (ИСПРАВЛЕНА) ---
+    // --- НАВИГАЦИЯ ---
     const homePage = document.getElementById("homePage");
     const shopPage = document.getElementById("shopPage");
     const profilePage = document.getElementById("profilePage");
     const navItems = document.querySelectorAll(".nav-item");
 
     function setActivePage(pageId) {
-        // Скрыть все страницы
         homePage.classList.add("hide");
         shopPage.classList.add("hide");
         profilePage.classList.add("hide");
         
-        // Показать выбранную
         if (pageId === "home") homePage.classList.remove("hide");
         if (pageId === "shop") {
             shopPage.classList.remove("hide");
-            renderShop(); // обновляем товары при открытии
+            renderShop();
         }
         if (pageId === "profile") profilePage.classList.remove("hide");
         
-        // Обновить активный пункт меню
         navItems.forEach(item => {
             const itemPage = item.getAttribute("data-page");
             if (itemPage === pageId) item.classList.add("active");
@@ -697,26 +746,23 @@
         updateUI();
         startEnergyRestore();
         
-        // Устанавливаем имя пользователя
         const userName = getUserDisplayName();
         if (userNameSpan) userNameSpan.innerText = userName;
         if (shopUserNameSpan) shopUserNameSpan.innerText = userName;
         if (profileUserNameSpan) profileUserNameSpan.innerText = userName;
         
-        // Обработчики тапа
         if (tapArea) {
             tapArea.addEventListener("click", (e) => { e.preventDefault(); handleTap(e); });
             tapArea.addEventListener("touchstart", (e) => { e.preventDefault(); handleTap(e); });
         }
         if (boostButton) boostButton.addEventListener("click", () => useBoost());
         
-        // Фильтры в магазине
         filterTabs.forEach(tab => {
             tab.addEventListener("click", () => {
                 filterTabs.forEach(t => t.classList.remove("active"));
                 tab.classList.add("active");
                 currentFilter = tab.getAttribute("data-filter");
-                if (!shopPage.classList.contains("hide")) renderShop(); // обновляем только если магазин открыт
+                if (!shopPage.classList.contains("hide")) renderShop();
             });
         });
         
@@ -727,7 +773,6 @@
             });
         }
         
-        // Навигация через нижнее меню
         navItems.forEach(item => {
             item.addEventListener("click", () => {
                 const page = item.getAttribute("data-page");
@@ -735,10 +780,8 @@
             });
         });
         
-        // Стартовая страница — главная
         setActivePage("home");
         
-        // Периодическое обновление UI
         setInterval(() => updateUI(), 1000);
         
         if (window.Telegram && Telegram.WebApp) {
