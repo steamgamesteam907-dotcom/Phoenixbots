@@ -5,361 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PHOENIXSHOP — Тапай и зарабатывай</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
-        body {
-            background: #FFF1E5;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .app-container {
-            max-width: 450px;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(145deg, #FFF7EF 0%, #FFE8D6 100%);
-            border-radius: 32px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            scrollbar-width: thin;
-        }
-
-        .app-container::-webkit-scrollbar { width: 4px; }
-        .app-container::-webkit-scrollbar-track { background: #FFD9B5; }
-        .app-container::-webkit-scrollbar-thumb { background: #E65C1E; border-radius: 8px; }
-
-        .page {
-            padding: 20px 16px 80px 16px;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 24px;
-        }
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #E65C1E, #FF8C42);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .manager-name {
-            font-size: 14px;
-            font-weight: 600;
-            background: rgba(230, 92, 30, 0.12);
-            padding: 6px 12px;
-            border-radius: 40px;
-            color: #C13B00;
-        }
-
-        /* ----- ТАПАЛКА ----- */
-        .profile-avatar {
-            display: flex;
-            justify-content: center;
-            margin: 16px 0 12px;
-            cursor: pointer;
-            position: relative;
-        }
-        .avatar-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #FF8C42;
-            box-shadow: 0 8px 20px rgba(230, 92, 30, 0.3);
-            transition: 0.07s linear;
-            background: #FFCFA5;
-        }
-        .avatar-img:active { transform: scale(0.96); }
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 140, 66, 0.5);
-            transform: scale(0);
-            animation: rippleAnim 0.5s linear;
-            pointer-events: none;
-        }
-        @keyframes rippleAnim {
-            to { transform: scale(3); opacity: 0; }
-        }
-
-        .tap-power { text-align: center; margin: 16px 0 12px; }
-        .tap-label { font-size: 15px; color: #BF7640; letter-spacing: 1px; font-weight: 600; }
-        .tap-amount {
-            font-size: 44px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #D84C00, #FF8C42);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .progress-container {
-            background: #FFD9B5;
-            border-radius: 60px;
-            height: 12px;
-            margin: 20px 0 12px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            width: 81%;
-            height: 100%;
-            background: linear-gradient(90deg, #FF6B35, #FFA559);
-            border-radius: 60px;
-            transition: width 0.2s ease;
-        }
-        .stats-mini {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 24px;
-            color: #B45A2A;
-            font-weight: 600;
-        }
-        .boost-block {
-            background: #FFFFFF;
-            border-radius: 20px;
-            padding: 16px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: 0.1s;
-            border: 1px solid #FFC69A;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            color: #A04414;
-        }
-        .boost-block.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .boost-block:active { background: #FFF0E5; transform: scale(0.98); }
-
-        /* ----- МАГАЗИН ----- */
-        .search-bar {
-            background: white;
-            border-radius: 60px;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border: 1px solid #FFCCA8;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-        .search-input {
-            background: transparent;
-            border: none;
-            color: #3E2A1C;
-            font-size: 15px;
-            width: 70%;
-            outline: none;
-        }
-        .search-input::placeholder { color: #CA9A6E; }
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .filter {
-            background: #FFE4CC;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #AA5726;
-            cursor: pointer;
-            transition: 0.1s;
-            white-space: nowrap;
-        }
-        .filter.active { background: #FF6B35; color: white; box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);}
-        .products-grid { display: flex; flex-direction: column; gap: 16px; }
-        .product-card {
-            background: white;
-            border-radius: 24px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #FFE1C6;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-        .product-info { display: flex; flex-direction: column; gap: 6px; }
-        .product-brand { font-size: 12px; color: #FF6B35; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
-        .product-name { font-size: 17px; font-weight: 700; color: #2D241A; }
-        .product-desc { font-size: 12px; color: #BB794C; }
-        .product-price { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 4px; color: #D84C00; }
-        .add-btn {
-            background: #FFE6D5;
-            width: 44px;
-            height: 44px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: #FF6B35;
-            cursor: pointer;
-            transition: 0.08s linear;
-        }
-        .add-btn:active { background: #FFD5BB; transform: scale(0.92); }
-
-        /* ----- ПРОФИЛЬ ----- */
-        .balance-section {
-            background: white;
-            border-radius: 28px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            text-align: center;
-            border: 1px solid #FFD9B5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-        .balance-label { font-size: 14px; color: #BF7640; letter-spacing: 1px; font-weight: 600; }
-        .balance-value {
-            font-size: 48px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 4px;
-            color: #D84315;
-        }
-        .coin-icon { font-size: 42px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        
-        .telegram-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(95deg, #FF6B35, #E65C1E);
-            border: none;
-            border-radius: 60px;
-            padding: 16px 20px;
-            width: 100%;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 8px 16px rgba(230, 92, 30, 0.3);
-            text-decoration: none;
-        }
-        .telegram-btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 8px rgba(230, 92, 30, 0.4);
-        }
-        .telegram-icon {
-            background: white;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        .telegram-text {
-            font-weight: 800;
-            font-size: 18px;
-            color: white;
-            letter-spacing: 0.5px;
-        }
-        .telegram-sub {
-            font-size: 12px;
-            color: #FFE2D1;
-            font-weight: 500;
-        }
-        .placeholder-card {
-            background: #FFF4EA;
-            border-radius: 28px;
-            padding: 40px 20px;
-            text-align: center;
-            border: 1px dashed #FFA55C;
-            color: #BA6A38;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* ----- НИЖНЯЯ НАВИГАЦИЯ ----- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 450px;
-            width: 100%;
-            background: rgba(255, 248, 240, 0.96);
-            backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 16px 20px;
-            border-top: 1px solid #FFDDB7;
-            border-radius: 28px 28px 0 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
-            z-index: 10;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: #C28252;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.1s;
-        }
-        .nav-item.active { color: #FF6B35; text-shadow: 0 0 2px #FFD0B0; }
-        .nav-icon { font-size: 22px; }
-        .hide { display: none; }
-
-        .toast-msg {
-            position: fixed;
-            bottom: 90px;
-            left: 20px;
-            right: 20px;
-            background: #2E241C;
-            color: #FFEAD5;
-            text-align: center;
-            padding: 12px;
-            border-radius: 60px;
-            font-size: 14px;
-            z-index: 200;
-            backdrop-filter: blur(8px);
-            border: 1px solid #FF9F60;
-        }
-        .floating-number {
-            position: fixed;
-            font-size: 28px;
-            font-weight: 800;
-            color: #FFB347;
-            text-shadow: 0 0 5px #E65C1E;
-            pointer-events: none;
-            z-index: 200;
-            animation: floatUp 0.6s ease-out forwards;
-        }
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0px) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
-        }
-    </style>
+    <!-- Подключаем внешний CSS файл -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app-container">
@@ -387,8 +34,8 @@
             <span>🚀 Boost +50</span>
             <span id="boostTimerLabel">24h</span>
         </div>
-        <div style="margin-top: 24px; background: #FFF1E5; border-radius: 24px; padding: 12px; text-align: center; font-size: 13px; color:#A9511E; font-weight: 500;">
-            👆 Тапай по аватарке ➕ зарабатывай монеты! Энергия восстанавливается каждые 5 сек.
+        <div style="margin-top: 24px; background: rgba(255, 241, 229, 0.7); backdrop-filter: blur(4px); border-radius: 24px; padding: 12px; text-align: center; font-size: 13px; color:#A9511E;">
+            👆 Тапай по аватарке ➕ зарабатывай монеты!
         </div>
     </div>
 
@@ -404,13 +51,10 @@
                 <span class="filter" data-filter="pod">Поды</span>
             </div>
         </div>
-        <div class="products-grid" id="productsGrid">
-            <!-- товары отрисоваются JS -->
-            <div style="text-align:center; padding:20px;">Загрузка товаров...</div>
-        </div>
+        <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <!-- ПРОФИЛЬ с телеграм кнопкой -->
+    <!-- ПРОФИЛЬ с историей покупок -->
     <div id="profilePage" class="page hide">
         <div class="top-bar"><div class="logo">PHOENIXSHOP</div><div class="manager-name" id="profileManagerName">Загрузка...</div></div>
         <div class="balance-section">
@@ -421,18 +65,26 @@
             </div>
         </div>
         
-        <!-- КРАСИВАЯ КНОПКА TELEGRAM -->
-        <a href="https://t.me/+Ng-cLuXBfypkNmVi" target="_blank" rel="noopener noreferrer" class="telegram-btn" id="telegramChannelBtn">
+        <a href="https://t.me/+vmAWe-6_y3w0MjY6" target="_blank" rel="noopener noreferrer" class="telegram-btn">
             <div class="telegram-icon">📢</div>
             <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <span class="telegram-text">🔥 PHOENIX CHANNEL</span>
+                <span class="telegram-text">⚡ PHOENIX CLUB</span>
                 <span class="telegram-sub">новости, акции, розыгрыши</span>
             </div>
-            <div style="margin-left: auto;">➡️</div>
+            <div style="margin-left: auto; font-size: 20px;">➡️</div>
         </a>
-        
-        <div class="placeholder-card">
-            🔥 Скоро здесь появится что-то жаркое 🔥
+
+        <!-- ИСТОРИЯ ПОКУПОК -->
+        <div class="history-section">
+            <div class="history-header">
+                <div class="history-title">
+                    🧾 История покупок
+                </div>
+                <button class="clear-history" id="clearHistoryBtn">Очистить</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">Покупок пока нет</div>
+            </div>
         </div>
     </div>
 
@@ -446,10 +98,8 @@
 <script>
     // ---------- ДАННЫЕ ТОВАРОВ ----------
     const productsData = [
-        // Жидкости
         { category: "liquid", brand: "ЖИДКОСТЬ", name: "NOISE", price: 10000, desc: "Премиум вкус" },
         { category: "liquid", brand: "ЖИДКОСТЬ", name: "DUFT", price: 10000, desc: "Насыщенный аромат" },
-        // Ашки
         { category: "ash", brand: "АШКА", name: "CITY 1400", price: 6000, desc: "Компактная, 1400 затяжек" },
         { category: "ash", brand: "АШКА", name: "FLABAR 7000", price: 8000, desc: "7000 затяжек" },
         { category: "ash", brand: "АШКА", name: "UPDENS 18000", price: 20000, desc: "18000 затяжек" },
@@ -459,7 +109,6 @@
         { category: "ash", brand: "АШКА", name: "IGRO 40000", price: 26000, desc: "Стильный дизайн, 40000" },
         { category: "ash", brand: "АШКА", name: "DOJO 40000", price: 30000, desc: "Премиум 40000" },
         { category: "ash", brand: "АШКА", name: "OVNS PUFF GEEK 45000", price: 28000, desc: "45000 затяжек" },
-        // Поды
         { category: "pod", brand: "ПОД", name: "КАРТРИДЖ XROS", price: 10000, desc: "Сменный картридж XROS" },
         { category: "pod", brand: "ПОД", name: "XROS 5 MINI + NOISE", price: 46000, desc: "Набор с жидкостью" },
         { category: "pod", brand: "ПОД", name: "DABBLER + NOISE", price: 16000, desc: "Комплект с NOISE" },
@@ -481,6 +130,8 @@
     const productsGrid = document.getElementById("productsGrid");
     const shopSearchInput = document.getElementById("shopSearchInput");
     const filterTabs = document.querySelectorAll("#filterTabs .filter");
+    const historyListDiv = document.getElementById("historyList");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
     // Игровые переменные
     const MAX_ENERGY = 2500;
@@ -488,10 +139,75 @@
     let currentEnergy = 2500;
     let lastBoostTime = 0;
     let energyRestoreInterval = null;
-
-    // Текущий фильтр и поиск
     let currentFilter = "all";
     let currentSearchQuery = "";
+
+    // История покупок (массив объектов: { name, price, timestamp })
+    let purchaseHistory = [];
+
+    // Загрузка истории из localStorage
+    function loadHistory() {
+        const saved = localStorage.getItem("phoenix_purchase_history");
+        if (saved) {
+            try {
+                purchaseHistory = JSON.parse(saved);
+            } catch(e) { purchaseHistory = []; }
+        } else {
+            purchaseHistory = [];
+        }
+    }
+
+    // Сохранение истории
+    function saveHistory() {
+        localStorage.setItem("phoenix_purchase_history", JSON.stringify(purchaseHistory));
+    }
+
+    // Добавление покупки в историю
+    function addToHistory(productName, price) {
+        const now = new Date();
+        const timestamp = `${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+        purchaseHistory.unshift({ name: productName, price: price, time: timestamp });
+        // Ограничим историю 50 записями
+        if (purchaseHistory.length > 50) purchaseHistory.pop();
+        saveHistory();
+        renderHistory();
+    }
+
+    // Очистка истории
+    function clearHistory() {
+        purchaseHistory = [];
+        saveHistory();
+        renderHistory();
+        showToast("🗑 История покупок очищена");
+    }
+
+    // Отображение истории в профиле
+    function renderHistory() {
+        if (!historyListDiv) return;
+        if (purchaseHistory.length === 0) {
+            historyListDiv.innerHTML = '<div class="empty-history">🧾 Покупок пока нет</div>';
+            return;
+        }
+        historyListDiv.innerHTML = purchaseHistory.map(item => `
+            <div class="history-item">
+                <div class="history-item-info">
+                    <span class="history-item-name">${escapeHtml(item.name)}</span>
+                    <span class="history-item-time">${item.time}</span>
+                </div>
+                <div class="history-item-price">- ${item.price.toLocaleString()} 🪙</div>
+            </div>
+        `).join('');
+    }
+
+    // Простой esc для защиты от XSS
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 
     // Получение имени пользователя Telegram
     function getUserDisplayName() {
@@ -500,13 +216,12 @@
             const firstName = user.first_name || "";
             const lastName = user.last_name || "";
             let fullName = `${firstName} ${lastName}`.trim();
-            if (fullName === "") fullName = "Игрок";
-            return fullName;
+            return fullName || "Игрок";
         }
         return "Игрок";
     }
 
-    // --- Игровые функции (баланс, энергия) ---
+    // --- Игровые функции ---
     function loadData() {
         const savedBalance = localStorage.getItem("phoenix_balance");
         const savedEnergy = localStorage.getItem("phoenix_energy");
@@ -521,12 +236,9 @@
             const now = Math.floor(Date.now() / 1000);
             const elapsed = now - lastUpdate;
             const energyGain = Math.floor(elapsed / 5);
-            if (energyGain > 0) {
-                currentEnergy = Math.min(MAX_ENERGY, currentEnergy + energyGain);
-            }
+            if (energyGain > 0) currentEnergy = Math.min(MAX_ENERGY, currentEnergy + energyGain);
         }
         localStorage.setItem("phoenix_last_energy_update", Math.floor(Date.now() / 1000));
-        
         if (isNaN(balance)) balance = 1000;
         if (isNaN(currentEnergy)) currentEnergy = MAX_ENERGY;
         currentEnergy = Math.min(MAX_ENERGY, Math.max(0, currentEnergy));
@@ -543,17 +255,12 @@
         const formatted = balance.toLocaleString();
         if (homeBalanceSpan) homeBalanceSpan.innerText = `$ ${formatted}`;
         if (profileBalanceSpan) profileBalanceSpan.innerText = formatted;
-        
         if (energyCounterSpan) energyCounterSpan.innerText = `${currentEnergy} / ${MAX_ENERGY}`;
-        if (energyFillDiv) {
-            const percent = (currentEnergy / MAX_ENERGY) * 100;
-            energyFillDiv.style.width = `${percent}%`;
-        }
+        if (energyFillDiv) energyFillDiv.style.width = `${(currentEnergy / MAX_ENERGY) * 100}%`;
         
         const missing = MAX_ENERGY - currentEnergy;
-        if (missing <= 0) {
-            recoveryTimerSpan.innerText = "0:00";
-        } else {
+        if (missing <= 0) recoveryTimerSpan.innerText = "0:00";
+        else {
             const totalSeconds = missing * 5;
             const mins = Math.floor(totalSeconds / 60);
             const secs = totalSeconds % 60;
@@ -571,10 +278,7 @@
             const hours = Math.floor(remaining / 3600);
             const minutes = Math.floor((remaining % 3600) / 60);
             const seconds = remaining % 60;
-            let text = "";
-            if (hours > 0) text = `${hours}ч ${minutes}м`;
-            else if (minutes > 0) text = `${minutes}м ${seconds}с`;
-            else text = `${seconds}с`;
+            let text = hours > 0 ? `${hours}ч ${minutes}м` : (minutes > 0 ? `${minutes}м ${seconds}с` : `${seconds}с`);
             boostTimerLabel.innerText = text;
         }
         saveData();
@@ -583,10 +287,7 @@
     function startEnergyRestore() {
         if (energyRestoreInterval) clearInterval(energyRestoreInterval);
         energyRestoreInterval = setInterval(() => {
-            if (currentEnergy < MAX_ENERGY) {
-                currentEnergy++;
-                updateUI();
-            }
+            if (currentEnergy < MAX_ENERGY) { currentEnergy++; updateUI(); }
         }, 5000);
     }
 
@@ -611,24 +312,14 @@
     }
 
     function handleTap(event) {
-        if (currentEnergy <= 0) {
-            showToast("❌ Нет энергии! Ждите восстановления.");
-            return;
-        }
+        if (currentEnergy <= 0) { showToast("❌ Нет энергии! Ждите восстановления."); return; }
         currentEnergy--;
         balance++;
         updateUI();
-        
         let clientX, clientY;
-        if (event.touches) {
-            clientX = event.touches[0].clientX;
-            clientY = event.touches[0].clientY;
-        } else {
-            clientX = event.clientX;
-            clientY = event.clientY;
-        }
+        if (event.touches) { clientX = event.touches[0].clientX; clientY = event.touches[0].clientY; }
+        else { clientX = event.clientX; clientY = event.clientY; }
         showFloatingNumber(clientX, clientY, 1);
-        
         const avatar = document.querySelector('.avatar-img');
         if (avatar) {
             const rect = avatar.getBoundingClientRect();
@@ -647,6 +338,7 @@
         if (balance >= price) {
             balance -= price;
             updateUI();
+            addToHistory(productName, price);
             showToast(`✅ Куплен ${productName}! -${price} монет`);
         } else {
             showToast(`⛔ Недостаточно монет! Нужно ${price}, у вас ${balance}`);
@@ -662,10 +354,7 @@
             showToast(`⏳ Буст будет доступен через ${hours}ч ${minutes}м`);
             return;
         }
-        if (currentEnergy === MAX_ENERGY) {
-            showToast("⚡ Энергия уже максимальная!");
-            return;
-        }
+        if (currentEnergy === MAX_ENERGY) { showToast("⚡ Энергия уже максимальная!"); return; }
         let newEnergy = Math.min(MAX_ENERGY, currentEnergy + 50);
         let restored = newEnergy - currentEnergy;
         currentEnergy = newEnergy;
@@ -674,37 +363,34 @@
         showToast(`🚀 Буст активирован! +${restored} энергии. Следующий буст через 24 часа.`);
     }
 
-    // --- ОТРИСОВКА МАГАЗИНА (фильтр + поиск) ---
+    // --- Отрисовка магазина ---
     function renderShop() {
         if (!productsGrid) return;
-        let filtered = productsData.filter(product => {
-            if (currentFilter !== "all" && product.category !== currentFilter) return false;
-            if (currentSearchQuery.trim() !== "") {
-                const query = currentSearchQuery.trim().toLowerCase();
-                return product.name.toLowerCase().includes(query) || product.desc.toLowerCase().includes(query);
+        let filtered = productsData.filter(p => {
+            if (currentFilter !== "all" && p.category !== currentFilter) return false;
+            if (currentSearchQuery.trim()) {
+                const q = currentSearchQuery.trim().toLowerCase();
+                return p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
             }
             return true;
         });
-
         if (filtered.length === 0) {
-            productsGrid.innerHTML = `<div style="text-align:center; padding:40px; background:#FFF4EA; border-radius:28px; color:#B85C26;">😕 Товаров не найдено</div>`;
+            productsGrid.innerHTML = `<div style="text-align:center; padding:40px;">😕 Товаров не найдено</div>`;
             return;
         }
-
-        productsGrid.innerHTML = filtered.map(product => `
-            <div class="product-card" data-category="${product.category}" data-product-name="${product.name}" data-price="${product.price}">
+        productsGrid.innerHTML = filtered.map(p => `
+            <div class="product-card">
                 <div class="product-info">
-                    <div class="product-brand">${product.brand}</div>
-                    <div class="product-name">${product.name}</div>
-                    <div class="product-desc">${product.desc}</div>
+                    <div class="product-brand">${p.brand}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-desc">${p.desc}</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <div class="product-price">$ ${product.price.toLocaleString()}</div>
-                    <div class="add-btn" data-product="${product.name.replace(/['"]/g, '&quot;')}" data-price="${product.price}">+</div>
+                    <div class="product-price">$ ${p.price.toLocaleString()}</div>
+                    <div class="add-btn" data-product="${p.name.replace(/['"]/g, '&quot;')}" data-price="${p.price}">+</div>
                 </div>
             </div>
         `).join('');
-
         document.querySelectorAll('#productsGrid .add-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -715,7 +401,7 @@
         });
     }
 
-    // --- НАВИГАЦИЯ ---
+    // --- Навигация ---
     const homePage = document.getElementById("homePage");
     const shopPage = document.getElementById("shopPage");
     const profilePage = document.getElementById("profilePage");
@@ -725,14 +411,9 @@
         homePage.classList.add("hide");
         shopPage.classList.add("hide");
         profilePage.classList.add("hide");
-        
         if (pageId === "home") homePage.classList.remove("hide");
-        if (pageId === "shop") {
-            shopPage.classList.remove("hide");
-            renderShop();
-        }
-        if (pageId === "profile") profilePage.classList.remove("hide");
-        
+        if (pageId === "shop") { shopPage.classList.remove("hide"); renderShop(); }
+        if (pageId === "profile") { profilePage.classList.remove("hide"); renderHistory(); }
         navItems.forEach(item => {
             const itemPage = item.getAttribute("data-page");
             if (itemPage === pageId) item.classList.add("active");
@@ -740,12 +421,12 @@
         });
     }
 
-    // --- ИНИЦИАЛИЗАЦИЯ ---
+    // --- Инициализация ---
     function init() {
         loadData();
+        loadHistory();
         updateUI();
         startEnergyRestore();
-        
         const userName = getUserDisplayName();
         if (userNameSpan) userNameSpan.innerText = userName;
         if (shopUserNameSpan) shopUserNameSpan.innerText = userName;
@@ -765,31 +446,21 @@
                 if (!shopPage.classList.contains("hide")) renderShop();
             });
         });
-        
         if (shopSearchInput) {
             shopSearchInput.addEventListener("input", (e) => {
                 currentSearchQuery = e.target.value;
                 if (!shopPage.classList.contains("hide")) renderShop();
             });
         }
-        
         navItems.forEach(item => {
-            item.addEventListener("click", () => {
-                const page = item.getAttribute("data-page");
-                setActivePage(page);
-            });
+            item.addEventListener("click", () => setActivePage(item.getAttribute("data-page")));
         });
+        if (clearHistoryBtn) clearHistoryBtn.addEventListener("click", () => clearHistory());
         
         setActivePage("home");
-        
         setInterval(() => updateUI(), 1000);
-        
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-        }
+        if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
     }
-    
     init();
 </script>
 </body>
