@@ -721,7 +721,7 @@
         </div>
         <div class="tap-power">
             <div class="tap-label">Сила тапа</div>
-            <div class="tap-amount" id="homeBalance">$ 10000</div>
+            <div class="tap-amount" id="homeBalance">$ 0</div>
         </div>
         <div class="progress-container">
             <div class="progress-fill" id="energyFill"></div>
@@ -735,7 +735,7 @@
             <span id="boostTimerLabel">24h</span>
         </div>
         <div style="margin-top: 24px; background: rgba(255, 241, 229, 0.7); backdrop-filter: blur(4px); border-radius: 24px; padding: 12px; text-align: center; font-size: 13px; color:#A9511E;">
-            👆 Тапай по аватарке ➕ зарабатывай монеты!
+            👆 Тапай по аватарке ➕ +1 монета!
         </div>
     </div>
 
@@ -761,7 +761,7 @@
             <div class="balance-label">ТВОЙ БАЛАНС</div>
             <div class="balance-value">
                 <span class="coin-icon">🪙</span>
-                <span id="profileBalance">10000</span>
+                <span id="profileBalance">0</span>
             </div>
         </div>
         
@@ -833,9 +833,9 @@
     const historyListDiv = document.getElementById("historyList");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
-    // Игровые переменные (начальный баланс 10000)
+    // Игровые переменные (начальный баланс 0, за тап +1)
     const MAX_ENERGY = 2500;
-    let balance = 10000;
+    let balance = 0;
     let currentEnergy = 2500;
     let lastBoostTime = 0;
     let energyRestoreInterval = null;
@@ -918,7 +918,7 @@
         const savedLastBoost = localStorage.getItem("phoenix_last_boost");
         const savedLastEnergyUpdate = localStorage.getItem("phoenix_last_energy_update");
         if (savedBalance !== null) balance = parseInt(savedBalance);
-        else balance = 10000; // начальный баланс 10000
+        else balance = 0; // начальный баланс 0
         if (savedEnergy !== null) currentEnergy = parseInt(savedEnergy);
         if (savedLastBoost !== null) lastBoostTime = parseInt(savedLastBoost);
         
@@ -930,7 +930,7 @@
             if (energyGain > 0) currentEnergy = Math.min(MAX_ENERGY, currentEnergy + energyGain);
         }
         localStorage.setItem("phoenix_last_energy_update", Math.floor(Date.now() / 1000));
-        if (isNaN(balance)) balance = 10000;
+        if (isNaN(balance)) balance = 0;
         if (isNaN(currentEnergy)) currentEnergy = MAX_ENERGY;
         currentEnergy = Math.min(MAX_ENERGY, Math.max(0, currentEnergy));
     }
@@ -1018,7 +1018,7 @@
     function handleTap(event) {
         if (currentEnergy <= 0) { showToast("❌ Нет энергии! Ждите восстановления."); return; }
         currentEnergy--;
-        balance++;
+        balance += 1;   // +1 монета за тап
         updateUI();
         let clientX, clientY;
         if (event.touches) { clientX = event.touches[0].clientX; clientY = event.touches[0].clientY; }
@@ -1044,7 +1044,6 @@
             updateUI();
             addToHistory(productName, price);
             showToast(`✅ Куплен ${productName}! -${price} монет`);
-            // Мигаем кнопкой покупки (визуальный фидбек)
             const activeBtn = document.activeElement;
             if (activeBtn && activeBtn.classList.contains('add-btn')) {
                 activeBtn.style.animation = 'purchase-flash 0.3s';
