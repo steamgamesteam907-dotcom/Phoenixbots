@@ -721,7 +721,7 @@
         </div>
         <div class="tap-power">
             <div class="tap-label">Сила тапа</div>
-            <div class="tap-amount" id="homeBalance">$ 0</div>
+            <div class="tap-amount" id="homeBalance">$ 5000</div>
         </div>
         <div class="progress-container">
             <div class="progress-fill" id="energyFill"></div>
@@ -761,7 +761,7 @@
             <div class="balance-label">ТВОЙ БАЛАНС</div>
             <div class="balance-value">
                 <span class="coin-icon">🪙</span>
-                <span id="profileBalance">0</span>
+                <span id="profileBalance">5000</span>
             </div>
         </div>
         
@@ -833,9 +833,9 @@
     const historyListDiv = document.getElementById("historyList");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
-    // Игровые переменные (начальный баланс 0, за тап +1)
+    // Игровые переменные (начальный баланс 5000, награда за тап +1)
     const MAX_ENERGY = 2500;
-    let balance = 0;
+    let balance = 5000;
     let currentEnergy = 2500;
     let lastBoostTime = 0;
     let energyRestoreInterval = null;
@@ -918,7 +918,7 @@
         const savedLastBoost = localStorage.getItem("phoenix_last_boost");
         const savedLastEnergyUpdate = localStorage.getItem("phoenix_last_energy_update");
         if (savedBalance !== null) balance = parseInt(savedBalance);
-        else balance = 0; // начальный баланс 0
+        else balance = 5000; // начальный баланс 5000
         if (savedEnergy !== null) currentEnergy = parseInt(savedEnergy);
         if (savedLastBoost !== null) lastBoostTime = parseInt(savedLastBoost);
         
@@ -930,7 +930,7 @@
             if (energyGain > 0) currentEnergy = Math.min(MAX_ENERGY, currentEnergy + energyGain);
         }
         localStorage.setItem("phoenix_last_energy_update", Math.floor(Date.now() / 1000));
-        if (isNaN(balance)) balance = 0;
+        if (isNaN(balance)) balance = 5000;
         if (isNaN(currentEnergy)) currentEnergy = MAX_ENERGY;
         currentEnergy = Math.min(MAX_ENERGY, Math.max(0, currentEnergy));
     }
