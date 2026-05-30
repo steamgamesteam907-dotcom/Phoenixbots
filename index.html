@@ -14,7 +14,7 @@
         }
 
         body {
-            background: #FFF1E5; /* тёплый оранжевый фон */
+            background: #FFF1E5;
             font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
@@ -173,16 +173,21 @@
             outline: none;
         }
         .search-input::placeholder { color: #CA9A6E; }
-        .filter-tabs { display: flex; gap: 12px; }
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
         .filter {
             background: #FFE4CC;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
             color: #AA5726;
             cursor: pointer;
             transition: 0.1s;
+            white-space: nowrap;
         }
         .filter.active { background: #FF6B35; color: white; box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);}
         .products-grid { display: flex; flex-direction: column; gap: 16px; }
@@ -197,9 +202,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
         .product-info { display: flex; flex-direction: column; gap: 6px; }
-        .product-brand { font-size: 12px; color: #FF6B35; font-weight: 800; letter-spacing: 0.5px; }
-        .product-name { font-size: 18px; font-weight: 700; color: #2D241A; }
-        .product-desc { font-size: 13px; color: #BB794C; }
+        .product-brand { font-size: 12px; color: #FF6B35; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+        .product-name { font-size: 17px; font-weight: 700; color: #2D241A; }
+        .product-desc { font-size: 12px; color: #BB794C; }
         .product-price { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 4px; color: #D84C00; }
         .add-btn {
             background: #FFE6D5;
@@ -217,7 +222,7 @@
         }
         .add-btn:active { background: #FFD5BB; transform: scale(0.92); }
 
-        /* ----- ПРОФИЛЬ (баланс + пусто) ----- */
+        /* ----- ПРОФИЛЬ ----- */
         .balance-section {
             background: white;
             border-radius: 28px;
@@ -250,7 +255,7 @@
             font-weight: 500;
         }
 
-        /* ----- НИЖНЯЯ НАВИГАЦИЯ (3 кнопки) оранжевая ----- */
+        /* ----- НИЖНЯЯ НАВИГАЦИЯ ----- */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -344,21 +349,24 @@
         </div>
     </div>
 
-    <!-- МАГАЗИН -->
+    <!-- МАГАЗИН (динамические товары) -->
     <div id="shopPage" class="page hide">
         <div class="top-bar"><div class="logo">PHOENIXSHOP</div><div class="manager-name" id="shopManagerName">Загрузка...</div></div>
         <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Поиск товаров...">
-            <div class="filter-tabs"><span class="filter active">Все</span><span class="filter">Товары</span></div>
+            <input type="text" class="search-input" id="shopSearchInput" placeholder="🔍 Поиск товаров...">
+            <div class="filter-tabs" id="filterTabs">
+                <span class="filter active" data-filter="all">Все</span>
+                <span class="filter" data-filter="liquid">Жидкости</span>
+                <span class="filter" data-filter="ash">Ашки</span>
+                <span class="filter" data-filter="pod">Поды</span>
+            </div>
         </div>
-        <div class="products-grid">
-            <div class="product-card" data-price="8000"><div class="product-info"><div class="product-brand">Шайба</div><div class="product-name">СНЮС PHOENIX</div><div class="product-desc">Cold Dry</div></div><div style="display:flex; align-items:center; gap:12px;"><div class="product-price">$ 8 000</div><div class="add-btn" data-product="Cold Dry">+</div></div></div>
-            <div class="product-card" data-price="8000"><div class="product-info"><div class="product-brand">Шайба</div><div class="product-name">СНЮС PHOENIX</div><div class="product-desc">Cool Mint</div></div><div style="display:flex; align-items:center; gap:12px;"><div class="product-price">$ 8 000</div><div class="add-btn" data-product="Cool Mint">+</div></div></div>
-            <div class="product-card" data-price="8000"><div class="product-info"><div class="product-brand">Шайба</div><div class="product-name">СНЮС PHOENIX</div><div class="product-desc">Citrus Frost</div></div><div style="display:flex; align-items:center; gap:12px;"><div class="product-price">$ 8 000</div><div class="add-btn" data-product="Citrus Frost">+</div></div></div>
+        <div class="products-grid" id="productsGrid">
+            <!-- товары будут отрисованы через JS -->
         </div>
     </div>
 
-    <!-- ПРОФИЛЬ (баланс + пустота) -->
+    <!-- ПРОФИЛЬ -->
     <div id="profilePage" class="page hide">
         <div class="top-bar"><div class="logo">PHOENIXSHOP</div><div class="manager-name" id="profileManagerName">Загрузка...</div></div>
         <div class="balance-section">
@@ -381,12 +389,27 @@
 </div>
 
 <script>
-    // ---------- ИГРОВАЯ МЕХАНИКА (ВСЁ ЛОКАЛЬНО) ----------
-    const MAX_ENERGY = 2500;
-    let balance = 1000;
-    let currentEnergy = 2500;
-    let lastBoostTime = 0;
-    let energyRestoreInterval = null;
+    // ---------- ДАННЫЕ ТОВАРОВ (категории: liquid, ash, pod) ----------
+    const productsData = [
+        // Жидкости
+        { category: "liquid", brand: "ЖИДКОСТЬ", name: "NOISE", price: 10000, desc: "Премиум вкус" },
+        { category: "liquid", brand: "ЖИДКОСТЬ", name: "DUFT", price: 10000, desc: "Насыщенный аромат" },
+        // Ашки
+        { category: "ash", brand: "АШКА", name: "CITY 1400", price: 6000, desc: "Компактная, 1400 затяжек" },
+        { category: "ash", brand: "АШКА", name: "FLABAR 7000", price: 8000, desc: "7000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "UPDENS 18000", price: 20000, desc: "18000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "CRYSTAL PRO SWITCH 30000", price: 26000, desc: "Мощная, 30000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "MAXGO 33000 2V1", price: 22000, desc: "2 в 1, 33000 тяг" },
+        { category: "ash", brand: "АШКА", name: "SMOOPYSMOKE 40000", price: 26000, desc: "40000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "IGRO 40000", price: 26000, desc: "Стильный дизайн, 40000" },
+        { category: "ash", brand: "АШКА", name: "DOJO 40000", price: 30000, desc: "Премиум 40000" },
+        { category: "ash", brand: "АШКА", name: "OVNS PUFF GEEK 45000", price: 28000, desc: "45000 затяжек" },
+        // Поды
+        { category: "pod", brand: "ПОД", name: "КАРТРИДЖ XROS", price: 10000, desc: "Сменный картридж XROS" },
+        { category: "pod", brand: "ПОД", name: "XROS 5 MINI + NOISE", price: 46000, desc: "Набор с жидкостью" },
+        { category: "pod", brand: "ПОД", name: "DABBLER + NOISE", price: 16000, desc: "Комплект с NOISE" },
+        { category: "pod", brand: "ПОД", name: "MYSTERY BOX", price: 16000, desc: "Секретный набор" }
+    ];
 
     // DOM элементы
     const homeBalanceSpan = document.getElementById("homeBalance");
@@ -400,22 +423,35 @@
     const userNameSpan = document.getElementById("userName");
     const shopUserNameSpan = document.getElementById("shopManagerName");
     const profileUserNameSpan = document.getElementById("profileManagerName");
+    const productsGrid = document.getElementById("productsGrid");
+    const shopSearchInput = document.getElementById("shopSearchInput");
+    const filterTabs = document.querySelectorAll("#filterTabs .filter");
 
-    // --- Функция для получения имени пользователя (Telegram / fallback) ---
+    // Игровые переменные
+    const MAX_ENERGY = 2500;
+    let balance = 1000;
+    let currentEnergy = 2500;
+    let lastBoostTime = 0;
+    let energyRestoreInterval = null;
+
+    // Текущий фильтр магазина
+    let currentFilter = "all";
+    let currentSearchQuery = "";
+
+    // Получение имени пользователя Telegram
     function getUserDisplayName() {
         if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
             const user = Telegram.WebApp.initDataUnsafe.user;
             const firstName = user.first_name || "";
             const lastName = user.last_name || "";
             let fullName = `${firstName} ${lastName}`.trim();
-            if (fullName === "") fullName = "Гость";
+            if (fullName === "") fullName = "Игрок";
             return fullName;
         }
-        // Если не в Telegram, можно спросить через prompt? Но для простоты - "Игрок"
         return "Игрок";
     }
 
-    // Загрузка данных из localStorage
+    // --- Игровые функции (баланс, энергия) ---
     function loadData() {
         const savedBalance = localStorage.getItem("phoenix_balance");
         const savedEnergy = localStorage.getItem("phoenix_energy");
@@ -486,7 +522,6 @@
             else text = `${seconds}с`;
             boostTimerLabel.innerText = text;
         }
-        
         saveData();
     }
 
@@ -498,6 +533,26 @@
                 updateUI();
             }
         }, 5000);
+    }
+
+    function showToast(msg) {
+        let existing = document.querySelector('.toast-msg');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+    }
+
+    function showFloatingNumber(x, y, value) {
+        const div = document.createElement('div');
+        div.className = 'floating-number';
+        div.innerText = `+${value}`;
+        div.style.left = `${x - 20}px`;
+        div.style.top = `${y - 30}px`;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 600);
     }
 
     function handleTap(event) {
@@ -533,26 +588,6 @@
         }
     }
 
-    function showFloatingNumber(x, y, value) {
-        const div = document.createElement('div');
-        div.className = 'floating-number';
-        div.innerText = `+${value}`;
-        div.style.left = `${x - 20}px`;
-        div.style.top = `${y - 30}px`;
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 600);
-    }
-
-    function showToast(msg) {
-        let existing = document.querySelector('.toast-msg');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast-msg';
-        toast.innerText = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
-    }
-
     function buyItem(productName, price) {
         if (balance >= price) {
             balance -= price;
@@ -584,7 +619,49 @@
         showToast(`🚀 Буст активирован! +${restored} энергии. Следующий буст через 24 часа.`);
     }
 
-    // ----- НАВИГАЦИЯ -----
+    // --- ОТРИСОВКА МАГАЗИНА (фильтр + поиск) ---
+    function renderShop() {
+        if (!productsGrid) return;
+        let filtered = productsData.filter(product => {
+            if (currentFilter !== "all" && product.category !== currentFilter) return false;
+            if (currentSearchQuery.trim() !== "") {
+                const query = currentSearchQuery.trim().toLowerCase();
+                return product.name.toLowerCase().includes(query) || product.desc.toLowerCase().includes(query);
+            }
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            productsGrid.innerHTML = `<div style="text-align:center; padding:40px; background:#FFF4EA; border-radius:28px; color:#B85C26;">😕 Товаров не найдено</div>`;
+            return;
+        }
+
+        productsGrid.innerHTML = filtered.map(product => `
+            <div class="product-card" data-category="${product.category}" data-product-name="${product.name}" data-price="${product.price}">
+                <div class="product-info">
+                    <div class="product-brand">${product.brand}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-desc">${product.desc}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="product-price">$ ${product.price.toLocaleString()}</div>
+                    <div class="add-btn" data-product="${product.name.replace(/['"]/g, '&quot;')}" data-price="${product.price}">+</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Навесить обработчики на кнопки покупки
+        document.querySelectorAll('#productsGrid .add-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const productName = btn.getAttribute('data-product');
+                const price = parseInt(btn.getAttribute('data-price'));
+                buyItem(productName, price);
+            });
+        });
+    }
+
+    // --- НАВИГАЦИЯ ---
     const homePage = document.getElementById("homePage");
     const shopPage = document.getElementById("shopPage");
     const profilePage = document.getElementById("profilePage");
@@ -595,7 +672,10 @@
         shopPage.classList.add("hide");
         profilePage.classList.add("hide");
         if (pageId === "home") homePage.classList.remove("hide");
-        if (pageId === "shop") shopPage.classList.remove("hide");
+        if (pageId === "shop") { 
+            shopPage.classList.remove("hide");
+            renderShop(); // перерисовываем при открытии
+        }
         if (pageId === "profile") profilePage.classList.remove("hide");
         
         navItems.forEach(item => {
@@ -605,64 +685,46 @@
         });
     }
 
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            setActivePage(item.getAttribute("data-page"));
-        });
-    });
-
-    // ----- УСТАНОВКА ИМЕНИ ПОЛЬЗОВАТЕЛЯ ВЕЗДЕ -----
-    function applyUserName() {
-        const displayName = getUserDisplayName();
-        if (userNameSpan) userNameSpan.innerText = displayName;
-        if (shopUserNameSpan) shopUserNameSpan.innerText = displayName;
-        if (profileUserNameSpan) profileUserNameSpan.innerText = displayName;
-    }
-
-    // ----- ИНИЦИАЛИЗАЦИЯ -----
+    // --- ИНИЦИАЛИЗАЦИЯ ---
     function init() {
         loadData();
         updateUI();
         startEnergyRestore();
         setActivePage("home");
-        applyUserName();   // применяем реальное имя
+        
+        const userName = getUserDisplayName();
+        if (userNameSpan) userNameSpan.innerText = userName;
+        if (shopUserNameSpan) shopUserNameSpan.innerText = userName;
+        if (profileUserNameSpan) profileUserNameSpan.innerText = userName;
         
         if (tapArea) {
             tapArea.addEventListener("click", (e) => { e.preventDefault(); handleTap(e); });
             tapArea.addEventListener("touchstart", (e) => { e.preventDefault(); handleTap(e); });
         }
-        
-        if (boostButton) {
-            boostButton.addEventListener("click", () => useBoost());
+        if (boostButton) boostButton.addEventListener("click", () => useBoost());
+
+        // Фильтры в магазине
+        filterTabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                filterTabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                currentFilter = tab.getAttribute("data-filter");
+                renderShop();
+            });
+        });
+
+        if (shopSearchInput) {
+            shopSearchInput.addEventListener("input", (e) => {
+                currentSearchQuery = e.target.value;
+                renderShop();
+            });
         }
-        
-        document.querySelectorAll('.add-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const productCard = btn.closest('.product-card');
-                const price = parseInt(productCard?.getAttribute('data-price') || '8000');
-                const productName = btn.getAttribute('data-product') || 'товар';
-                buyItem(productName, price);
-            });
-        });
-        
-        document.querySelectorAll('.filter').forEach(f => {
-            f.addEventListener('click', function() {
-                document.querySelectorAll('.filter').forEach(ft => ft.classList.remove('active'));
-                this.classList.add('active');
-                showToast('🔍 Фильтр (демо)');
-            });
-        });
-        
-        // обновление таймера восстановления и UI
-        setInterval(() => {
-            updateUI();
-        }, 1000);
+
+        setInterval(() => updateUI(), 1000);
         
         if (window.Telegram && Telegram.WebApp) {
             Telegram.WebApp.ready();
             Telegram.WebApp.expand();
-            // дополнительно если имя изменится после инициализации — но обычно статично
         }
     }
     
