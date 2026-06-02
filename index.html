@@ -796,23 +796,25 @@
 </div>
 
 <script>
-    // ---------- ДАННЫЕ ТОВАРОВ (ЦЕНЫ УДВОЕНЫ ПО ПРОСЬБЕ) ----------
+    // ---------- ДАННЫЕ ТОВАРОВ (ЦЕНЫ УВЕЛИЧЕНЫ В 5 РАЗ ОТ ИЗНАЧАЛЬНЫХ) ----------
+    // Исходные цены: жидкости 10000, ашки от 6000 до 30000, поды 10000/46000/16000/16000
+    // Умножаем на 5:
     const productsData = [
-        { category: "liquid", brand: "ЖИДКОСТЬ", name: "NOISE", price: 20000, desc: "Премиум вкус" },
-        { category: "liquid", brand: "ЖИДКОСТЬ", name: "DUFT", price: 20000, desc: "Насыщенный аромат" },
-        { category: "ash", brand: "АШКА", name: "CITY 1400", price: 12000, desc: "Компактная, 1400 затяжек" },
-        { category: "ash", brand: "АШКА", name: "FLABAR 7000", price: 16000, desc: "7000 затяжек" },
-        { category: "ash", brand: "АШКА", name: "UPDENS 18000", price: 40000, desc: "18000 затяжек" },
-        { category: "ash", brand: "АШКА", name: "CRYSTAL PRO SWITCH 30000", price: 52000, desc: "Мощная, 30000 затяжек" },
-        { category: "ash", brand: "АШКА", name: "MAXGO 33000 2V1", price: 44000, desc: "2 в 1, 33000 тяг" },
-        { category: "ash", brand: "АШКА", name: "SMOOPYSMOKE 40000", price: 52000, desc: "40000 затяжек" },
-        { category: "ash", brand: "АШКА", name: "IGRO 40000", price: 52000, desc: "Стильный дизайн, 40000" },
-        { category: "ash", brand: "АШКА", name: "DOJO 40000", price: 60000, desc: "Премиум 40000" },
-        { category: "ash", brand: "АШКА", name: "OVNS PUFF GEEK 45000", price: 56000, desc: "45000 затяжек" },
-        { category: "pod", brand: "ПОД", name: "КАРТРИДЖ XROS", price: 20000, desc: "Сменный картридж XROS" },
-        { category: "pod", brand: "ПОД", name: "XROS 5 MINI + NOISE", price: 92000, desc: "Набор с жидкостью" },
-        { category: "pod", brand: "ПОД", name: "DABBLER + NOISE", price: 32000, desc: "Комплект с NOISE" },
-        { category: "pod", brand: "ПОД", name: "MYSTERY BOX", price: 32000, desc: "Секретный набор" }
+        { category: "liquid", brand: "ЖИДКОСТЬ", name: "NOISE", price: 50000, desc: "Премиум вкус" },
+        { category: "liquid", brand: "ЖИДКОСТЬ", name: "DUFT", price: 50000, desc: "Насыщенный аромат" },
+        { category: "ash", brand: "АШКА", name: "CITY 1400", price: 30000, desc: "Компактная, 1400 затяжек" },
+        { category: "ash", brand: "АШКА", name: "FLABAR 7000", price: 40000, desc: "7000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "UPDENS 18000", price: 100000, desc: "18000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "CRYSTAL PRO SWITCH 30000", price: 130000, desc: "Мощная, 30000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "MAXGO 33000 2V1", price: 110000, desc: "2 в 1, 33000 тяг" },
+        { category: "ash", brand: "АШКА", name: "SMOOPYSMOKE 40000", price: 130000, desc: "40000 затяжек" },
+        { category: "ash", brand: "АШКА", name: "IGRO 40000", price: 130000, desc: "Стильный дизайн, 40000" },
+        { category: "ash", brand: "АШКА", name: "DOJO 40000", price: 150000, desc: "Премиум 40000" },
+        { category: "ash", brand: "АШКА", name: "OVNS PUFF GEEK 45000", price: 140000, desc: "45000 затяжек" },
+        { category: "pod", brand: "ПОД", name: "КАРТРИДЖ XROS", price: 50000, desc: "Сменный картридж XROS" },
+        { category: "pod", brand: "ПОД", name: "XROS 5 MINI + NOISE", price: 230000, desc: "Набор с жидкостью" },
+        { category: "pod", brand: "ПОД", name: "DABBLER + NOISE", price: 80000, desc: "Комплект с NOISE" },
+        { category: "pod", brand: "ПОД", name: "MYSTERY BOX", price: 80000, desc: "Секретный набор" }
     ];
 
     // DOM элементы
